@@ -1,29 +1,40 @@
 import scenenet_pb2 as sn
 import os
 
-data_root_path = 'data/val'
-protobuf_path = 'data/scenenet_rgbd_val.pb'
-
 # These functions produce a file path (on Linux systems) to the image given
 # a view and render path from a trajectory.  As long the data_root_path to the
 # root of the dataset is given.  I.e. to either val or train
-def photo_path_from_view(render_path,view):
-    photo_path = os.path.join(render_path,'photo')
-    image_path = os.path.join(photo_path,'{0}.jpg'.format(view.frame_num))
-    return os.path.join(data_root_path,image_path)
+def photo_path_from_view(data_root_path, render_path, view):
+    photo_path = os.path.join(render_path, 'photo')
+    image_path = os.path.join(photo_path, '{0}.jpg'.format(view.frame_num))
+    return os.path.join(data_root_path, image_path)
 
-def instance_path_from_view(render_path,view):
-    photo_path = os.path.join(render_path,'instance')
-    image_path = os.path.join(photo_path,'{0}.png'.format(view.frame_num))
-    return os.path.join(data_root_path,image_path)
 
-def depth_path_from_view(render_path,view):
-    photo_path = os.path.join(render_path,'depth')
-    image_path = os.path.join(photo_path,'{0}.png'.format(view.frame_num))
-    return os.path.join(data_root_path,image_path)
+def instance_path_from_view(data_root_path, render_path, view):
+    photo_path = os.path.join(render_path, 'instance')
+    image_path = os.path.join(photo_path, '{0}.png'.format(view.frame_num))
+    return os.path.join(data_root_path, image_path)
+
+
+def depth_path_from_view(data_root_path, render_path, view):
+    photo_path = os.path.join(render_path, 'depth')
+    image_path = os.path.join(photo_path, '{0}.png'.format(view.frame_num))
+    return os.path.join(data_root_path, image_path)
 
 
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(usage="read_protobuf")
+    parser.add_argument('--pb', type=str, help='Path to the protobuf file.')
+    parser.add_argument('--data-root', type=str, default='./', help='Data root.')
+
+    args = parser.parse_args()
+    print(args)
+
+    protobuf_path = args.pb
+    data_root_path = args.data_root
+
     trajectories = sn.Trajectories()
     try:
         with open(protobuf_path,'rb') as f:
@@ -73,8 +84,7 @@ if __name__ == '__main__':
         frame numbers and timestamps.
         '''
         for view in traj.views:
-            print(photo_path_from_view(traj.render_path,view))
-            print(depth_path_from_view(traj.render_path,view))
-            print(instance_path_from_view(traj.render_path,view))
+            print(photo_path_from_view(data_root_path, traj.render_path, view))
+            print(depth_path_from_view(data_root_path, traj.render_path, view))
+            print(instance_path_from_view(data_root_path, traj.render_path, view))
             print(view)
-        break

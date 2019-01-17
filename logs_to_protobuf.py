@@ -225,7 +225,9 @@ def fill_trajectory(info_lines,layout_lines,trajectory,frame_skip=25):
         shutter_close_pose.lookat.z = shutter_close.camera_lookat[2]
         shutter_close_pose.timestamp = shutter_close.time
 
+
 if __name__ == '__main__':
+    import argparse
     trajectories = sn.Trajectories()
     if len(sys.argv) < 3:
         print('Please run as python logs_to_protobuf.py /path/to/scenenetrgbd/renderer/build/render_info.log /path/to/scenenetrgbd/camera_trajectory_generator/build/scene_and_trajectory_description.txt')
